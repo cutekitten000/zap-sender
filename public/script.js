@@ -117,12 +117,14 @@ function sendMessages() {
                 sendMessage(number, message);
                 document.getElementById('status').textContent = `Enviando mensagem para: ${number}`;
                 console.log(`Enviando mensagem para: ${number}`);
-                numbers = numbers.filter((_, i) => i !== index); // Remover número da lista
-                document.getElementById('numbers').value = numbers.join('\n');
             } else {
                 document.getElementById('status').textContent = `Número inválido: ${number}`;
                 console.log(`Número inválido: ${number}`);
             }
+
+            // Remover número da lista e continuar
+            numbers = numbers.filter((_, i) => i !== index);
+            document.getElementById('numbers').value = numbers.join('\n');
         } else {
             clearInterval(intervalId);
             isSending = false;
