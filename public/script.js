@@ -8,46 +8,44 @@ console.log('Conectando ao servidor via Socket.IO...');
 
 socket.on('connect', () => {
     console.log('Conectado ao servidor via Socket.IO');
+    checkAuthentication();
 });
 
 socket.on('disconnect', () => {
     console.log('Desconectado do servidor');
 });
 
-socket.on('qr', (qr) => {
+socket.on('qr', (qrUrl) => {
     console.log('QR Code recebido, exibindo...');
-    document.getElementById("qrcode").innerHTML = "";
-    new QRCode(document.getElementById("qrcode"), {
-        text: qr,
-        width: 256,
-        height: 256,
-        colorDark : "#ffffff",
-        colorLight : "#333333",
-        correctLevel : QRCode.CorrectLevel.H
-    });
+    document.getElementById("qrcode").innerHTML = `<img src="${qrUrl}">`;
     qrContainer.style.display = 'block';
     appContainer.style.display = 'none';
+    localStorage.setItem('isAuthenticated', false);
     console.log('QR Code exibido');
 });
 
 socket.on('authenticated', () => {
     qrContainer.style.display = 'none';
     appContainer.style.display = 'block';
+    localStorage.setItem('isAuthenticated', true);
     console.log('Usuário autenticado');
 });
 
 socket.on('ready', () => {
     qrContainer.style.display = 'none';
     appContainer.style.display = 'block';
+    localStorage.setItem('isAuthenticated', true);
     console.log('Cliente está pronto para enviar mensagens');
 });
 
 socket.on('auth_failure', (msg) => {
     console.error('Falha na autenticação:', msg);
+    localStorage.setItem('isAuthenticated', false);
 });
 
 socket.on('disconnected', (reason) => {
     console.log('Cliente desconectado:', reason);
+    localStorage.setItem('isAuthenticated', false);
 });
 
 document.getElementById('send').addEventListener('click', () => {
@@ -68,11 +66,28 @@ document.getElementById('stop').addEventListener('click', () => {
         console.log('Envio de mensagens pausado');
     } else {
         sendMessages();
-        stopButton.textContent = 'Stop';
+        stopButton.textContent = 'Parar';
         stopButton.style.backgroundColor = '#cf6679';
         console.log('Envio de mensagens retomado');
     }
 });
+
+function checkAuthentication() {
+    fetch('/is-authenticated')
+        .then(response => response.json())
+        .then(data => {
+            if (data.isAuthenticated) {
+                qrContainer.style.display = 'none';
+                appContainer.style.display = 'block';
+                console.log('Usuário já está autenticado');
+            } else {
+                qrContainer.style.display = 'block';
+                appContainer.style.display = 'none';
+                console.log('Usuário não está autenticado');
+            }
+        })
+        .catch(error => console.error('Erro ao verificar autenticação:', error));
+}
 
 function sendMessages() {
     let numbers = document.getElementById('numbers').value.split('\n').map(n => n.trim());

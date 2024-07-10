@@ -31,18 +31,22 @@ h1 {
 label {
   display: block;
   margin-bottom: 5px;
-  font-weight: bold;
+  color: #e0e0e0;
 }
 
-textarea, input {
+input[type="number"],
+textarea {
   width: 100%;
   padding: 10px;
+  background-color: #333333;
+  border: 1px solid #555555;
   border-radius: 5px;
-  border: 1px solid #424242;
-  background-color: #2b2b2b;
   color: #e0e0e0;
-  margin-bottom: 10px;
   resize: none;
+}
+
+input[type="number"] {
+  max-width: 100px;
 }
 
 textarea {
@@ -55,32 +59,36 @@ textarea {
 }
 
 button {
-  padding: 10px 20px;
+  width: 48%;
+  padding: 10px;
+  background-color: #bb86fc;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
-  background-color: #bb86fc;
   color: #121212;
   font-weight: bold;
+  cursor: pointer;
   transition: background-color 0.3s;
 }
 
 button:hover {
-  background-color: #a85fe8;
+  background-color: #a76ccf;
 }
 
-button#stop {
-  background-color: #cf6679;
+button:active {
+  background-color: #8d5bb3;
 }
 
-button#stop:hover {
-  background-color: #b55464;
+button:disabled {
+  background-color: #555555;
+  cursor: not-allowed;
 }
 
 .status {
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: #2b2b2b;
-  color: #e0e0e0;
+  margin-top: 20px;
+  font-weight: bold;
+  color: #ff3d00;
+}
+
+#qr-container {
+  display: none;
 }

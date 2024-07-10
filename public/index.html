@@ -3,38 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zap Sender</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>WhatsApp Bulk Sender</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Zap Sender</h1>
-        <div id="qr-container" class="form-group">
-            <label>Escaneie o QR code para logar:</label>
-            <div id="qrcode"></div>
-        </div>
-        <div id="app-container" style="display: none;">
+    <div id="qr-container" class="container">
+        <h1>QR Code de Autenticação</h1>
+        <div id="qrcode"></div>
+    </div>
+    <div id="app-container" class="container">
+        <h1>Envio de Mensagens em Massa</h1>
+        <div>
             <div class="form-group">
                 <label for="numbers">Números (um por linha):</label>
-                <textarea id="numbers" placeholder="5591986225635&#10;5598983542652"></textarea>
+                <textarea id="numbers" placeholder="5561987654321"></textarea>
             </div>
             <div class="form-group">
-                <label for="interval">Intervalo entre mensagens (segundos):</label>
-                <input type="number" id="interval" min="1" value="5">
+                <label for="interval">Intervalo entre mensagens (em segundos):</label>
+                <input type="number" id="interval" value="5">
             </div>
             <div class="form-group">
                 <label for="message">Mensagem:</label>
-                <textarea id="message" placeholder="Olá, tudo bem?..."></textarea>
+                <textarea id="message" placeholder="Digite sua mensagem aqui"></textarea>
             </div>
-            <div class="form-group buttons">
+            <div class="buttons">
                 <button id="send">Enviar</button>
-                <button id="stop">Stop</button>
+                <button id="stop">Parar</button>
             </div>
-            <div class="status" id="status">Pronto para enviar...</div>
+            <div id="status" class="status"></div>
         </div>
     </div>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

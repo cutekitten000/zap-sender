@@ -1,6 +1,6 @@
 const express = require('express');
 const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
-const qrcode = require('qrcode-terminal');
+const qrcode = require('qrcode');
 const fs = require('fs');
 const path = require('path');
 const http = require('http');
@@ -9,6 +9,8 @@ const socketIo = require('socket.io');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
+
+let isAuthenticated = false;
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -20,11 +22,14 @@ const client = new Client({
 
 client.on('qr', (qr) => {
     console.log('QR Code gerado, aguardando leitura...');
-    io.emit('qr', qr);
+    qrcode.toDataURL(qr, (err, url) => {
+        io.emit('qr', url);
+    });
 });
 
 client.on('authenticated', () => {
     console.log('Usuário autenticado');
+    isAuthenticated = true;
     io.emit('authenticated');
 });
 
@@ -40,6 +45,7 @@ client.on('auth_failure', msg => {
 
 client.on('disconnected', (reason) => {
     console.log('Cliente desconectado', reason);
+    isAuthenticated = false;
     io.emit('disconnected', reason);
 });
 
@@ -59,6 +65,10 @@ app.post('/send-message', (req, res) => {
         res.status(500).json({ status: 'error', message: err.message });
         console.error('Erro ao enviar mensagem:', err);
     });
+});
+
+app.get('/is-authenticated', (req, res) => {
+    res.json({ isAuthenticated });
 });
 
 server.listen(3000, () => {
